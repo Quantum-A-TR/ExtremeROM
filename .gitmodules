@@ -25,3 +25,6 @@
 [submodule "external/omcdecoder"]
 	path = external/omcdecoder
 	url = https://github.com/soulr344/OMCDecoder
+[submodule "target/a34x/patches/tee"]
+	path = target/a34x/patches/tee
+	url = https://github.com/Fede2782/unica_target_a34x_patches_tee
