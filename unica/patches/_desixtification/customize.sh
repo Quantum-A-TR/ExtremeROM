@@ -31,7 +31,6 @@ if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "qssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "e
     SET_METADATA "system" "system/lib/libdl.so" 0 0 644 "u:object_r:system_lib_file:s0"
     SET_METADATA "system" "system/lib/libdl_android.so" 0 0 644 "u:object_r:system_lib_file:s0"
     SET_METADATA "system" "system/lib/libm.so" 0 0 644 "u:object_r:system_lib_file:s0"
-    SET_METADATA_RECURSIVE "system" "system/lib" 0 0 755 "u:object_r:system_file:s0"
     LOG_STEP_OUT
 
     LOG_STEP_IN "- Setting props"
