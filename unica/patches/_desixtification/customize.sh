@@ -1,8 +1,8 @@
 if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "qssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "essi" ]]; then
     LOG_STEP_IN "- Target device with 32-Bit HALs detected."
 
-    LOG_STEP_IN "- Adding A34 (a34xdxx) lib/ blobs"
-    ADD_TO_WORK_DIR "a34xdxx" "system" "system/lib" 0 0 644
+    LOG_STEP_IN "- Adding S23 FE (r11sxxx) lib/ blobs"
+    ADD_TO_WORK_DIR "r11sxxx" "system" "system/lib" 0 0 644
 
     BLOBS_LIST="
     system/apex/com.android.i18n.apex
@@ -13,7 +13,7 @@ if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "qssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "e
     "
     for blob in $BLOBS_LIST
     do
-        ADD_TO_WORK_DIR "a34xdxx" "system" "$blob"
+        ADD_TO_WORK_DIR "r11sxxx" "system" "$blob"
     done
     LOG_STEP_OUT
 
@@ -31,7 +31,7 @@ if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "qssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "e
     SET_METADATA "system" "system/lib/libdl.so" 0 0 644 "u:object_r:system_lib_file:s0"
     SET_METADATA "system" "system/lib/libdl_android.so" 0 0 644 "u:object_r:system_lib_file:s0"
     SET_METADATA "system" "system/lib/libm.so" 0 0 644 "u:object_r:system_lib_file:s0"
-SET_METADATA_RECURSIVE "system" "system/lib" 0 0 755 "u:object_r:system_file:s0"
+    SET_METADATA_RECURSIVE "system" "system/lib" 0 0 755 "u:object_r:system_file:s0"
     LOG_STEP_OUT
 
     LOG_STEP_IN "- Setting props"
