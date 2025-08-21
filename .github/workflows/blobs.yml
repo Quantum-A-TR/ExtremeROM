@@ -15,6 +15,8 @@ jobs:
         include:
           - module: "Galaxy A26 (a26xxx)"
             path: "prebuilts/samsung/a26xxx"
+          - module: "Galaxy A34 (a34xdxx)"
+            path: "prebuilts/samsung/a34xdxx"
           - module: "Galaxy A73 (a73xqxx)"
             path: "prebuilts/samsung/a73xqxx"
           - module: "Galaxy S22 Ultra (b0sxxx)"
