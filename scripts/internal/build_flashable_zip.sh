@@ -26,7 +26,10 @@ TARGET_FINGERPRINT="${TARGET_FINGERPRINT//$(GET_PROP "$FW_DIR/$TARGET_FIRMWARE_P
 
 TMP_DIR="$OUT_DIR/zip"
 
-FILE_NAME="ExtremeROM_${ROM_VERSION}_$(date +%Y%m%d)_${TARGET_CODENAME}"
+ROM_STATUS="UNOFFICIAL"
+$ROM_IS_OFFICIAL && ROM_STATUS="OFFICIAL"
+
+FILE_NAME="ExtremeROM_${ROM_STATUS}_${ROM_VERSION}_$(date +%Y%m%d)_${TARGET_CODENAME}"
 while [ -f "$OUT_DIR/$FILE_NAME" ]; do
     INCREMENTAL=$((INCREMENTAL + 1))
     FILE_NAME="ExtremeROM_${ROM_VERSION}_$(date +%Y%m%d)-${INCREMENTAL}_${TARGET_CODENAME}.zip"
@@ -190,51 +193,6 @@ GENERATE_OP_LIST()
         LOGE "OS size ($OCCUPIED_SPACE) is bigger than the target group size ($TARGET_SUPER_GROUP_SIZE)"
         exit 1
     fi
-}
-
-GENERATE_OTA_METADATA()
-{
-    local PROTO_FILE="$SRC_DIR/external/android-tools/vendor/build/tools/releasetools/ota_metadata.proto"
-
-    local INCREMENTAL
-    local RELEASE
-    local SECURITY_PATCH_LEVEL
-    local TIMESTAMP
-
-    INCREMENTAL="$(GET_PROP "system" "ro.build.version.incremental")"
-    RELEASE="$(GET_PROP "system" "ro.build.version.release")"
-    SECURITY_PATCH_LEVEL="$(GET_PROP "system" "ro.build.version.security_patch")"
-    TIMESTAMP="$(GET_PROP "system" "ro.build.date.utc")"
-
-    mkdir -p "$TMP_DIR/META-INF/com/android"
-
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/ota_utils.py#259
-    if [ -f "$PROTO_FILE" ]; then
-        local MESSAGE
-
-        MESSAGE+="type: BLOCK"
-        MESSAGE+=", precondition: {device: \\\"$TARGET_CODENAME\\\"}"
-        MESSAGE+=", postcondition: {device: \\\"$TARGET_CODENAME\\\""
-        MESSAGE+=", build: \\\"$SOURCE_FINGERPRINT\\\""
-        MESSAGE+=", build_incremental: \\\"$INCREMENTAL\\\""
-        MESSAGE+=", timestamp: $TIMESTAMP"
-        MESSAGE+=", sdk_level: \\\"$RELEASE\\\""
-        MESSAGE+=", security_patch_level: \\\"$SECURITY_PATCH_LEVEL\\\"}"
-
-        EVAL "protoc --encode=build.tools.releasetools.OtaMetadata --proto_path=\"$(dirname "$PROTO_FILE")\" \"$PROTO_FILE\" <<< \"$MESSAGE\" > \"$TMP_DIR/META-INF/com/android/metadata.pb\"" || exit 1
-    fi
-
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/ota_utils.py#317
-    {
-        echo "ota-required-cache=0"
-        echo "ota-type=BLOCK"
-        echo "post-build=$SOURCE_FINGERPRINT"
-        echo "post-build-incremental=$INCREMENTAL"
-        echo "post-sdk-level=$RELEASE"
-        echo "post-security-patch-level=$SECURITY_PATCH_LEVEL"
-        echo "post-timestamp=$TIMESTAMP"
-        echo "pre-device=$TARGET_CODENAME"
-    } > "$TMP_DIR/META-INF/com/android/metadata"
 }
 
 GENERATE_UPDATER_SCRIPT()
@@ -518,9 +476,9 @@ GENERATE_UPDATER_SCRIPT()
 
         echo -e "\n"
         echo    'ui_print("Cleaning up...");'
-        echo    'package_extract_dir("scripts", "/tmp/scripts");'
-        echo    'set_metadata_recursive("/tmp/scripts", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0755);'
-        echo    'run_program("/tmp/scripts/cleanup.sh");'
+        echo    'package_extract_file("cleanup.sh", "/tmp/cleanup.sh");'
+        echo    'set_metadata("/tmp/cleanup.sh", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0755);'
+        echo    'run_program("/tmp/cleanup.sh");'
 
         echo -e "\n"
         echo    'set_progress(1);'
@@ -663,19 +621,24 @@ GENERATE_UPDATER_SCRIPT
 LOG "- Generating build_info.txt"
 GENERATE_BUILD_INFO
 
-LOG "- Generating OTA metadata"
-GENERATE_OTA_METADATA
-
 LOG "- Creating zip"
-EVAL "echo | zip > \"$TMP_DIR/rom.zip\" && zip -d \"$TMP_DIR/rom.zip\" -" || exit 1
-while IFS= read -r f; do
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/common.py#3601
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/common.py#3609
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/ota_utils.py#184
-    # https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/tools/releasetools/ota_utils.py#186
-    EVAL "cd \"$TMP_DIR\" && zip -r -X -Z store \"$TMP_DIR/rom.zip\" \"${f//$TMP_DIR\//}\"" || exit 1
-done < <(find "$TMP_DIR" -type f ! -name "*.zip")
+EVAL "rm -f \"$OUT_DIR/rom.zip\"" || exit 1
+pushd "$TMP_DIR" > /dev/null
 
+# 1. Compressed files (everything except zips, special dat files, META-INF)
+find . -type f ! -name "*.new.dat.br" ! -name "*.patch.dat" > compressed.txt
+
+# 2. Stored files (special dat files + META-INF folder)
+find . -type f \( -name "*.new.dat.br" -o -name "*.patch.dat" -o -name "META-INF" \) > stored.txt
+META_INF="./META-INF"
+
+# Add batches
+EVAL "7z a -tzip -mx=9 -mmt=$(nproc --all) \"$TMP_DIR/rom.zip\" @\"compressed.txt\""
+EVAL "7z a -tzip -mx=0 -mmt=$(nproc --all) \"$TMP_DIR/rom.zip\" @\"stored.txt\" \"$META_INF\""
+
+# 3. Final move/rename
 mv -f "$TMP_DIR/rom.zip" "$OUT_DIR/$FILE_NAME.zip"
+
+popd > /dev/null
 
 exit 0
