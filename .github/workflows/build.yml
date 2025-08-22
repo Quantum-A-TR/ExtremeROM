@@ -78,6 +78,11 @@ jobs:
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/extract_fw.sh --force --ignore-source
 
+      - name: Check source directory
+        run: | 
+          ls -l /home/runner/work/ExtremeROM-a34x/out/fw/SM-A346E_TUR/system_ext/etc/
+    
+
       - name: Prepare build environment
         run: |
           sudo cp -a -T "/home/runner/work/ExtremeROM-a34x/out/fw/SM-A346E_TUR/system_ext/etc/fs_config_dirs" "/home/runner/work/ExtremeROM-a34x/out/target/a34x/work_dir/system_ext/etc/fs_config_dirs"
