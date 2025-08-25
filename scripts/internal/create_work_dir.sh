@@ -144,7 +144,8 @@ COPY_TARGET_KERNEL()
     if $TARGET_INCLUDE_PATCHED_VBMETA; then
         LOG "- Copying vbmeta.img from target firmware"
         mkdir -p "$WORK_DIR/kernel"
-        EVAL "cp -a \"$FW_DIR/$TARGET_FIRMWARE_PATH/vbmeta_patched.img\" \"$WORK_DIR/kernel/vbmeta.img\"" || exit 1
+        # This line is the only one that was changed
+        EVAL "cp -a \"$FW_DIR/$TARGET_FIRMWARE_PATH/avb/vbmeta_patched.img\" \"$WORK_DIR/kernel/vbmeta.img\"" || exit 1
     else
         [ -f "$WORK_DIR/kernel/vbmeta.img" ] && rm -f "$WORK_DIR/kernel/vbmeta.img"
         [ -d "$WORK_DIR/kernel" ] && [ -n "$(find "$WORK_DIR/kernel" -maxdepth 0 -empty)" ] && rm -rf "$WORK_DIR/kernel"
