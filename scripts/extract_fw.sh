@@ -423,9 +423,9 @@ for i in "${FIRMWARES[@]}"; do
         exit 1
     fi
 
+    EXTRACT_AVB_BINARIES
     EXTRACT_KERNEL_BINARIES
     EXTRACT_OS_PARTITIONS
-    EXTRACT_AVB_BINARIES
 
     echo -n "$DOWNLOADED_FIRMWARE" > "$FW_DIR/${MODEL}_${CSC}/.extracted"
 
