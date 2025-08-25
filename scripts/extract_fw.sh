@@ -436,6 +436,21 @@ for i in "${FIRMWARES[@]}"; do
     LOG_STEP_OUT; LOG_STEP_OUT
 done
 
+# Process target firmware to ensure vbmeta_patched.img is created
+LOG_STEP_IN "- Processing target firmware for vbmeta"
+
+PARSE_FIRMWARE_STRING "$TARGET_FIRMWARE" || exit 1
+BL_TAR="$(find "$ODIN_DIR/${MODEL}_${CSC}" -name "BL_$(cut -d "/" -f 1 -s <<< "$DOWNLOADED_FIRMWARE")*.md5" | sort -r | head -n 1)"
+
+if [ ! "$BL_TAR" ]; then
+    LOG "\033[0;31m! No BL tar found for target firmware\033[0m"
+    exit 1
+fi
+
+EXTRACT_AVB_BINARIES
+
+LOG_STEP_OUT
+
 rm -rf "$TMP_DIR"
 
 exit 0
