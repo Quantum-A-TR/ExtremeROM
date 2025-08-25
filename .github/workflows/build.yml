@@ -80,6 +80,11 @@ jobs:
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/extract_fw.sh --force --ignore-source
 
+      - name: Fix file permissions
+        run: |
+         sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
+         chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
+
       - name: Build ROM
         run: |
           source ./buildenv.sh ${{ matrix.target }}
