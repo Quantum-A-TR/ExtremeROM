@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [beyond0lte, beyond1lte, beyond2lte, beyondx, x1s, y2s, z3s, c1s, c2s, r8s, o1s, t2s, p3s, r9s, r0s, b0s, g0s]
+        target: [a34x]
 
     steps:
       - name: Checkout repo
@@ -84,6 +84,12 @@ jobs:
         run: |
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/make_rom.sh --force
+
+      - name: Fix file permissions
+        run: |
+          sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
+          chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
+          chmod +x ./scripts/make_rom.sh
 
       - name: Upload to GoFile
         run: |
