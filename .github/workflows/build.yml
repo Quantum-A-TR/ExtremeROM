@@ -80,16 +80,16 @@ jobs:
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/extract_fw.sh --force --ignore-source
 
-      - name: Build ROM
-        run: |
-          source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/make_rom.sh --force
-
       - name: Fix file permissions
         run: |
           sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
           chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
           chmod +x ./scripts/make_rom.sh
+
+      - name: Build ROM
+        run: |
+          source ./buildenv.sh ${{ matrix.target }}
+          ./scripts/make_rom.sh --force
 
       - name: Upload to GoFile
         run: |
