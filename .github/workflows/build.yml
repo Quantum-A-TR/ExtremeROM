@@ -93,15 +93,15 @@ jobs:
 
       - name: Upload to GoFile
         run: |
-          ZIP_FILE=$(find out -maxdepth 1 -type f -name "*.zip" | head -n 1)
+          TAR_FILE=$(find out -maxdepth 1 -type f -name "*.tar" | head -n 1)
 
-          RESPONSE=$(curl -s -F "file=@$ZIP_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
+          RESPONSE=$(curl -s -F "file=@TAR_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
 
           echo "Uploaded successfully! Download link:"
           echo "$RESPONSE" | jq -r '.data.downloadPage'
 
           echo "MD5:"
-          md5sum "$ZIP_FILE"
+          md5sum "$TAR_FILE"
 
           echo "SHA256:"
-          sha256sum "$ZIP_FILE"
+          sha256sum "$TAR_FILE"
