@@ -1,4 +1,4 @@
-name: Build ExtremeROM for a34x
+name: Build ExtremeROM-a34x
 
 on:
   workflow_dispatch:
@@ -48,11 +48,11 @@ jobs:
           echo -n "${{ secrets.PLATFORM_KEY_PK8 }}" | base64 --decode > security/extremerom_platform.pk8
           echo -n "${{ secrets.PLATFORM_KEY_PEM }}" | base64 --decode > security/extremerom_platform.x509.pem
 
-      - name: Set up JDK 11
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '21'
           cache: 'gradle'
 
       - name: Build dependencies
@@ -80,28 +80,28 @@ jobs:
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/extract_fw.sh --force --ignore-source
 
+      - name: Build ROM
+        run: |
+          source ./buildenv.sh ${{ matrix.target }}
+          ./scripts/make_rom.sh --force
+
       - name: Fix file permissions
         run: |
           sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
           chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
           chmod +x ./scripts/make_rom.sh
 
-      - name: Build ROM
-        run: |
-          source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/make_rom.sh --force
-
       - name: Upload to GoFile
         run: |
-         TAR_FILE=$(find out -maxdepth 1 -type f -name "*.tar" | head -n 1)
-         
-         RESPONSE=$(curl -s -F "file=@$TAR_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
+          ZIP_FILE=$(find out -maxdepth 1 -type f -name "*.zip" | head -n 1)
 
-         echo "Uploaded successfully! Download link:"
-         echo "$RESPONSE" | jq -r '.data.downloadPage'
+          RESPONSE=$(curl -s -F "file=@$ZIP_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
 
-         echo "MD5:"
-         md5sum "$TAR_FILE"
+          echo "Uploaded successfully! Download link:"
+          echo "$RESPONSE" | jq -r '.data.downloadPage'
 
-         echo "SHA256:"
-         sha256sum "$TAR_FILE"
+          echo "MD5:"
+          md5sum "$ZIP_FILE"
+
+          echo "SHA256:"
+          sha256sum "$ZIP_FILE"
