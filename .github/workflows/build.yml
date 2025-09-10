@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [a34x]
+        target: [beyond0lte, beyond1lte, beyond2lte, beyondx, x1s, y2s, z3s, c1s, c2s, r8s, o1s, t2s, p3s, r9s, r0s, b0s, g0s]
 
     steps:
       - name: Checkout repo
@@ -80,12 +80,6 @@ jobs:
           source ./buildenv.sh ${{ matrix.target }}
           ./scripts/extract_fw.sh --force --ignore-source
 
-      - name: Fix file permissions
-        run: |
-          sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
-          chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
-          chmod +x ./scripts/make_rom.sh
-
       - name: Build ROM
         run: |
           source ./buildenv.sh ${{ matrix.target }}
@@ -95,23 +89,7 @@ jobs:
         run: |
           ZIP_FILE=$(find out -maxdepth 1 -type f -name "*.zip" | head -n 1)
 
-          SERVER_RESPONSE=$(curl -s "https://api.gofile.io/getServer")
-          SERVER_URL=$(echo "$SERVER_RESPONSE" | jq -r '.data.server')
-
-          if [ -z "$SERVER_URL" ]; then
-            echo "Error: Could not get a GoFile server URL."
-            exit 1
-          fi
-
-          RESPONSE=$(curl -s -F "file=@$ZIP_FILE" \
-                         -F "token=${{ secrets.GOFILE_TOKEN }}" \
-                         -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" \
-                         "https://${SERVER_URL}.gofile.io/uploadFile")
-          
-          if [ -z "$RESPONSE" ]; then
-            echo "Error: Upload response was empty. Check curl command and GoFile token."
-            exit 1
-          fi
+          RESPONSE=$(curl -s -F "file=@$ZIP_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
 
           echo "Uploaded successfully! Download link:"
           echo "$RESPONSE" | jq -r '.data.downloadPage'
