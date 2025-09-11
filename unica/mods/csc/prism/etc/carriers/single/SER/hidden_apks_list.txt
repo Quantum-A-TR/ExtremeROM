@@ -1,2 +1,0 @@
-/hidden/app/RuStore.apk
-/hidden/app/yandex-search.apk

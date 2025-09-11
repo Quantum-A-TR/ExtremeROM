@@ -1,5 +1,0 @@
-4
-BlockchainBasicKit.apk
-Fast.apk
-SamsungPayStub.apk
-Upday.apk

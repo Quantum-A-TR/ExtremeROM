@@ -1,5 +1,0 @@
-4
-DigitalKey.apk
-MdecService.apk
-SamsungCarKeyFw.apk
-SamsungPayStub.apk

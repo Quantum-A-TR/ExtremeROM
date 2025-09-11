@@ -1,7 +1,0 @@
-6
-FBAppManager_NS.apk
-FBInstaller_NS.apk
-FBServices.apk
-Facebook_stub_preload.apk
-SwiftKey-market-arm64-v8a-release.apk
-SwiftKeyFactorySettings-samsung.apk
