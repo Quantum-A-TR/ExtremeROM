@@ -1,4 +1,0 @@
-id=uwb
-name=UWB blobs
-author=xfwdrev
-description=Add UWB blobs if target device is capable.
