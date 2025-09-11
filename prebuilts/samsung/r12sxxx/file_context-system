@@ -2,3 +2,5 @@
 /system/system_ext u:object_r:system_file:s0
 /system/system_ext/apex u:object_r:system_file:s0
 /system/system_ext/apex/com\.android\.vndk\.v34\.apex u:object_r:system_file:s0
+/system/priv-app u:object_r:system_file:s0
+/system/priv-app/wallpaper-res/wallpaper-res.apk u:object_r:system_file:s0
