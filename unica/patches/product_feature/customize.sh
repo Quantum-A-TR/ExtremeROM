@@ -25,7 +25,6 @@ if [[ "$SOURCE_PRODUCT_FIRST_API_LEVEL" != "$TARGET_PRODUCT_FIRST_API_LEVEL" ]];
     system/framework/services.jar/smali/com/android/server/SystemServer.smali
     system/framework/services.jar/smali/com/android/server/enterprise/hdm/HdmVendorController.smali
     system/framework/services.jar/smali/com/android/server/enterprise/hdm/HdmSakManager.smali
-    system/framework/services.jar/smali/com/android/server/knox/dar/ddar/ta/TAProxy.smali
     system/framework/services.jar/smali_classes2/com/android/server/power/PowerManagerUtil.smali
     system/framework/services.jar/smali_classes2/com/android/server/sepunion/EngmodeService\$EngmodeTimeThread.smali
     "
