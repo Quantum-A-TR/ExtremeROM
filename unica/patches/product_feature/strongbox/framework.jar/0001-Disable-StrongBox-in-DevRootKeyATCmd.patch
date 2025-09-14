@@ -1,0 +1,31 @@
+From ad47ca800730c92fb3d1cad80569586e4c9f7080 Mon Sep 17 00:00:00 2001
+From: BlackMesa123 <giangrecosalvo9@gmail.com>
+Date: Sat, 8 Jun 2024 14:16:18 +0200
+Subject: [PATCH] Disable StrongBox in DevRootKeyATCmd
+
+---
+diff --git a/smali_classes5/com/android/server/DevRootKeyATCmd.smali b/smali_classes5/com/android/server/DevRootKeyATCmd.smali
+index b6d18db7..75a6c1e3 100644
+--- a/smali_classes5/com/android/server/DevRootKeyATCmd.smali
++++ b/smali_classes5/com/android/server/DevRootKeyATCmd.smali
+@@ -3972,7 +3972,7 @@
+ 
+     if-ne v2, v9, :cond_5
+ 
+-    const/4 v10, 0x1
++    const/4 v10, 0x0
+ 
+     invoke-virtual {v15, v10}, Landroid/security/keystore/KeyGenParameterSpec$Builder;->setIsStrongBoxBacked(Z)Landroid/security/keystore/KeyGenParameterSpec$Builder;
+ 
+@@ -4279,7 +4279,7 @@
+ 
+     if-ne v2, v4, :cond_d
+ 
+-    const/4 v4, 0x1
++    const/4 v4, 0x0
+ 
+     invoke-virtual {v6, v4}, Landroid/security/keystore/KeyGenParameterSpec$Builder;->setIsStrongBoxBacked(Z)Landroid/security/keystore/KeyGenParameterSpec$Builder;
+ 
+-- 
+2.46.0
+
