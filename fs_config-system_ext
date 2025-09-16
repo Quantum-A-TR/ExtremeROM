@@ -1,3 +1,0 @@
-# Reverting the commit ffecf823b6db54e55186304de94cad531a2b6f75
-
-This commit reverts the changes made in the original commit which cleaned up the fs_config-system_ext file by removing blank and malformed lines.
