@@ -82,8 +82,8 @@ jobs:
 
       - name: Fix file permissions
         run: |
-          sudo chown -R runner:runner /home/runner/work/ExtremeROM-MTK/ExtremeROM-MTK/out
-          chmod -R u+rw /home/runner/work/ExtremeROM-MTK/ExtremeROM-MTK/out
+          sudo chown -R runner:runner /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
+          chmod -R u+rw /home/runner/work/ExtremeROM-a34x/ExtremeROM-a34x/out
           chmod +x ./scripts/make_rom.sh
 
       - name: Build ROM
