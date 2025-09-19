@@ -89,8 +89,6 @@ if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "mssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "m
     DELETE_FROM_WORK_DIR "system" "system/priv-app/vexfwk_service"
 
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system_ext" "app/MDMLSample/MDMLSample.apk"
-    ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system_ext" "app/mediatek-res/mediatek-res.apk"
-
 
     DELETE_FROM_WORK_DIR "system_ext" "bin"
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system_ext" "bin"
