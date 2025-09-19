@@ -70,7 +70,6 @@ if [[ $TARGET_SINGLE_SYSTEM_IMAGE == "mssi" || $TARGET_SINGLE_SYSTEM_IMAGE == "m
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/public.libraries-trustonic.txt"
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/resolution_tuner_app_list.xml"
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/public.libraries-camera.samsung.txt"
-    ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/public.libraries-polarr.txt"
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/public.libraries-arcsoft.txt"
     ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/TelephonyLog_dynamic.ds"
     DELETE_FROM_WORK_DIR "system" "system/etc/public.libraries-vexfwk.samsung.txt"
