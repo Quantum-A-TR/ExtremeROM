@@ -1,4 +1,4 @@
-name: Build ExtremeROM-a34x
+name: Build ExtremeROM 2.6.1-nxt for a34x
 
 on:
   workflow_dispatch:
